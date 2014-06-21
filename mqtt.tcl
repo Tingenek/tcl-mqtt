@@ -31,6 +31,7 @@ set c [::mqtt::simpleconnect $c]
 sendhex $sock $c
 vwait state
 set state [::mqtt::readhex $sock]
+fileevent $sock readable ""
 catch {after cancel $id}
 #Check for CONNACK.Connected
 if {$state == "20020000"} {
@@ -54,7 +55,7 @@ return 0
 
 proc ::mqtt::disconnect {sock} {
 #send DISCONNECT cmd
-::mqtt::sendhex $sock e000
+catch {::mqtt::sendhex $sock e000}
 catch {close $sock}
 }
 
